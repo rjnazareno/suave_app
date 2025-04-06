@@ -7,7 +7,7 @@ import 'models/product.dart';
 class DatabaseService {
   static late Isar isar;
 
-  // ---------------- INITIALIZATION ---------------- //
+
 
   static Future<void> init() async {
     final dir = await getApplicationDocumentsDirectory();
@@ -116,7 +116,7 @@ class DatabaseService {
   }
 
   static Future<void> checkout() async {
-    final cartItems = await getCartItems(); // ✅ uses safe method
+    final cartItems = await getCartItems(); 
 
     await isar.writeTxn(() async {
       for (var item in cartItems) {
@@ -127,7 +127,7 @@ class DatabaseService {
           await isar.products.put(product);
         }
 
-        // Mark item as ordered
+        
         item.ordered = true;
         item.inCart = false;
         await isar.items.put(item);
@@ -143,7 +143,7 @@ class DatabaseService {
 
   static Future<List<Item>> getCartItems() async {
     final items = await isar.items.filter().inCartEqualTo(true).findAll();
-    return items; // ✅ Always return list, never null
+    return items; 
   }
 
   // ---------------- PRODUCTS ---------------- //
