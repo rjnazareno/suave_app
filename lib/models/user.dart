@@ -9,7 +9,7 @@ class User {
   late String username;
   late String password;
   
-  bool isAdmin = false; // ✅ Add this if not present
+  bool isAdmin = false; 
 
   User({required this.username, required this.password, required this.isAdmin});
 }

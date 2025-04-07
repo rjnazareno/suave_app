@@ -34,11 +34,16 @@ class DatabaseService {
     if (productCount == 0) {
       final sampleProducts = [
         Product(name: "Light Washed Denim", price: 4100, imagePath: "assets/s1.png", stock: 10),
-        Product(name: "Denim jacket pockets", price: 4295, imagePath: "assets/s2.png", stock: 10),
-        Product(name: "Regular-fit flannel jacket", price: 3995, imagePath: "assets/s3.png", stock: 10),
-        Product(name: "Pocketed denim jacket", price: 4200, imagePath: "assets/s4.png", stock: 10),
-        Product(name: "Lyocell linen overshirt with pockets", price: 4995, imagePath: "assets/s5.png", stock: 10),
-        Product(name: "Tencel regular-fit overshirt", price: 5100, imagePath: "assets/s6.png", stock: 10),
+Product(name: "Denim jacket pockets", price: 4295, imagePath: "assets/s2.png", stock: 10),
+Product(name: "Cotton chambray shirt", price: 3995, imagePath: "assets/s10.png", stock: 10),
+Product(name: "Pocketed denim jacket", price: 4200, imagePath: "assets/s4.png", stock: 10),
+Product(name: "Lyocell linen overshirt with pockets", price: 4995, imagePath: "assets/s5.png", stock: 10),
+Product(name: "Tencel One Size-fit overshirt", price: 5100, imagePath: "assets/s6.png", stock: 10),
+Product(name: "Ribbed cotton knitted sweater", price: 3000, imagePath: "assets/s7.png", stock: 10),
+Product(name: "Wool-blend flannel overshirt", price: 4600, imagePath: "assets/s8.png", stock: 10),
+Product(name: "Printed cotton sweatshirt", price: 2500, imagePath: "assets/s9.png", stock: 10),
+Product(name: "One Size-fit flannel jacket", price: 4200, imagePath: "assets/s3.png", stock: 10),
+
       ];
       await isar.writeTxn(() async {
         await isar.products.putAll(sampleProducts);

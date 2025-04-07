@@ -16,7 +16,7 @@ class CartScreen extends ConsumerWidget {
     final cartItems = ref.watch(cartProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white, // 🤍 Cart screen background
+      backgroundColor: Colors.white, 
       appBar: AppBar(
         title: const Text("Your Cart", style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.black,
@@ -109,7 +109,7 @@ class CartScreen extends ConsumerWidget {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Align(
-        alignment: Alignment.centerLeft, // 👈 Align text to the left
+        alignment: Alignment.centerLeft, 
         child: Text(
           "Total: ₱${totalPrice.toStringAsFixed(0)}",
           style: const TextStyle(
@@ -121,7 +121,7 @@ class CartScreen extends ConsumerWidget {
       ),
       const SizedBox(height: 16),
       ElevatedButton(
-        onPressed: () => _checkout(context),
+        onPressed: () => _checkout(context, ref),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -162,52 +162,53 @@ class CartScreen extends ConsumerWidget {
     }
   }
 
-void _checkout(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (_) => AlertDialog(
-      title: const Text("Confirm Order"),
-      content: const Text("Are you sure you want to place this order?"),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("Cancel"),
-        ),
-        TextButton(
-          onPressed: () async {
-            final cartItems = await DatabaseService.getCartItems();
-            final products = await DatabaseService.getProducts();
+void _checkout(BuildContext context, WidgetRef ref) {
+  final cartAsyncValue = ref.read(cartProvider);
 
-            for (var item in cartItems) {
-              final product = products.firstWhere(
-                (p) => p.name == item.name,
-                orElse: () => Product(name: item.name, price: 0, stock: 0, imagePath: ''),
-              );
+  cartAsyncValue.whenData((cartItems) async {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Confirm Order"),
+        content: const Text("Are you sure you want to place this order?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              // ✅ Stock check before calling checkout
+              final products = await DatabaseService.getProducts();
 
-              final newStock = product.stock - item.quantity;
-              if (newStock >= 0) {
-                await DatabaseService.updateProductStock(product.id, newStock);
-              } else {
-                // Optional: Show a message if stock isn't enough
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Not enough stock for ${item.name}")),
+              for (var item in cartItems) {
+                final product = products.firstWhere(
+                  (p) => p.name == item.name,
+                  orElse: () => Product(name: item.name, price: 0, stock: 0, imagePath: ''),
                 );
-                Navigator.pop(context);
-                return;
+
+                if (product.stock < item.quantity) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Not enough stock for ${item.name}")),
+                  );
+                  return;
+                }
               }
-            }
 
-            await DatabaseService.checkout();
-            Navigator.pop(context);
+              // ✅ Let DatabaseService.checkout handle the rest
+              await DatabaseService.checkout();
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Order placed!")),
-            );
-          },
-          child: const Text("Confirm"),
-        ),
-      ],
-    ),
-  );
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Order placed!")),
+              );
+            },
+            child: const Text("Confirm"),
+          ),
+        ],
+      ),
+    );
+  });
 }
 }

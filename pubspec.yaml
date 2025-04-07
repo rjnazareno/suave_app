@@ -79,6 +79,10 @@ flutter:
     - assets/s4.png
     - assets/s5.png
     - assets/s6.png
+    - assets/s7.png
+    - assets/s8.png
+    - assets/s9.png
+    - assets/s10.png
     - assets/logo.png
     
   # An image asset can refer to one or more resolution-specific "variants", see

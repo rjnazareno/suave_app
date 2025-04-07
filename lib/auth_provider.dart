@@ -21,16 +21,16 @@ class AuthNotifier extends StateNotifier<User?> {
  Future<User?> signInWithReturn(String username, String password) async {
   User? user = await DatabaseService.signIn(username, password);
   if (user != null) {
-    // If the user is admin, set their isAdmin flag to true
+    
     if (user.username == 'admin' && user.password == 'adminpass') {
       user.isAdmin = true;
     } else {
       user.isAdmin = false;
     }
-    state = user; // Set the user in the state
+    state = user; 
     return user;
   }
-  return null; // If no user is found or credentials are incorrect
+  return null; 
 }
 
   void signOut() {

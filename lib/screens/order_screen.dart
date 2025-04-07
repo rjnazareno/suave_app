@@ -17,7 +17,13 @@ class OrdersScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Your Orders", style: TextStyle(color: Colors.white)),
+        title: const Text(
+          "Orders",
+          style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -125,7 +131,7 @@ class OrdersScreen extends ConsumerWidget {
                     ),
                   ),
                   Container(
-  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 32), // more spacing inside
+  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 32), 
   decoration: const BoxDecoration(
     color: Colors.black,
     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -191,10 +197,10 @@ class OrdersScreen extends ConsumerWidget {
               orElse: () => Product(name: item.name, price: 0, imagePath: '', stock: 0),
             );
 
-            // Return the stock
+          
             await DatabaseService.updateProductStock(product.id, product.stock + item.quantity);
 
-            // Delete the order
+           
             await DatabaseService.deleteOrder(item);
 
             Navigator.pop(context);
